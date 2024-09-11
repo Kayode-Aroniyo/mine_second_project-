@@ -1,0 +1,33 @@
+import com.atlassian.jira.component.ComponentAccessor
+import com.onresolve.jira.groovy.user.FieldBehaviours
+import groovy.transform.BaseScript
+
+@BaseScript FieldBehaviours fieldBehaviours
+if (getActionName() in ["Create Issue", "Create"]) { //LIMITATION ONLY APPLY THAT ON CREATE ISSUE ;) 
+	def summary = getFieldById("summary")
+	def defaultValueSummary = "[SRE_Component] Brief Description of the Story KPI oriented"
+	if (! underlyingIssue?.summary ) {
+		summary.setFormValue(defaultValueSummary)
+	}
+
+	def desc = getFieldById("description") 
+	def defaultValue = """
+
+	*Topic :*
+	[Description of the story]
+
+	*What :*
+	[Write specific steps that need to be completed]
+
+	*Business Gain :*
+	[Highlight the benefits and potential positive outcomes of implementing this story. Explain how it aligns with the Arsenal goals and added values (Ex : Savings on time/cost/resources)]
+
+	*Acceptance Criteria :*
+	[List the criteria(s) that must be verified to consider that the Story is done]
+	"""
+
+	if (! underlyingIssue?.description ) {
+		desc.setFormValue(defaultValue)    
+	}
+
+}
